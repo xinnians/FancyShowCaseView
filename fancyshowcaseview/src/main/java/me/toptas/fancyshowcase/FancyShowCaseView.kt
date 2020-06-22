@@ -246,7 +246,7 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
         mCustomView = activity.layoutInflater.inflate(layout, this, false)
         mCustomView?.apply {
             addView(this)
-            viewInflateListener?.onViewInflated(this,(props.focusedView!![props.index] as View).id,props.index)
+            viewInflateListener?.onViewInflated(this,props.focusedView!![props.index].id(),props.index)
         }
 
 //        activity.layoutInflater.inflate(layout, this, false)?.apply {

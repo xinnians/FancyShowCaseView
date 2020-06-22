@@ -10,6 +10,8 @@ internal interface IFocusedView {
     fun waitForLayout(onLayout: () -> Unit)
 
     fun cantFocus() = width() == 0 && height() == 0
+
+    fun id(): Int
 }
 
 internal class FocusedView(private val view: View) : IFocusedView {
@@ -26,6 +28,8 @@ internal class FocusedView(private val view: View) : IFocusedView {
     override fun waitForLayout(onLayout: () -> Unit) {
         view.globalLayoutListener { onLayout() }
     }
+
+    override fun id(): Int = view.id
 
     fun view() = view
 

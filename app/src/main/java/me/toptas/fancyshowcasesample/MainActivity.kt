@@ -249,7 +249,7 @@ class MainActivity : BaseActivity() {
                     .focusOn(it)
                     .enableTouchOnFocusedView(true)
                     .customView(R.layout.layout_my_custom_view_arrow, object : OnViewInflateListener {
-                        override fun onViewInflated(view: View) {
+                        override fun onViewInflated(view: View,focusId: Int,focusIndex: Int) {
                             val image = (view as RelativeLayout).findViewById<ImageView>(R.id.iv_custom_view)
                             val params = image.layoutParams as RelativeLayout.LayoutParams
 
