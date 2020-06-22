@@ -52,7 +52,7 @@ class CustomQueueActivity : BaseActivity() {
 
         val fancyShowCaseView1 = FancyShowCaseView.Builder(this)
                 .title("First Queue Item")
-                .focusOn(btn_queue_1)
+                .focusOn(arrayListOf(btn_queue_1) as ArrayList<View>)
                 .customView(R.layout.layout_my_custom_view, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
                         view.findViewById<View>(R.id.btn_action_1).setOnClickListener(mClickListener)

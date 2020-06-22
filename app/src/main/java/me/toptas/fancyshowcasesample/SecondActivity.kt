@@ -71,7 +71,7 @@ class SecondActivity : BaseActivity() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         FancyShowCaseView.Builder(this)
-                .focusOn(findViewById(item.itemId))
+                .focusOn(findViewById<View>(item.itemId))
                 .title("Focus on Actionbar items")
                 .fitSystemWindows(true)
                 .build()

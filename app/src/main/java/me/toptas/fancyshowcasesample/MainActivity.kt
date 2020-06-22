@@ -54,6 +54,7 @@ class MainActivity : BaseActivity() {
         btn_simple.setOnClickListener {
             FancyShowCaseView.Builder(this)
                     .title("No Focus")
+                    .focusOn(arrayListOf(btn_simple,btn_focus,btn_rounded_rect) as ArrayList<View>)
                     .build()
                     .show()
         }
@@ -61,7 +62,7 @@ class MainActivity : BaseActivity() {
         //Shows a FancyShowCaseView that focus on a vie
         btn_focus.setOnClickListener {
             FancyShowCaseView.Builder(this)
-                    .focusOn(it)
+                    .focusOn(arrayListOf(it))
                     .title("Focus on View only once")
                     .showOnce("id0")
                     .build()
@@ -122,7 +123,7 @@ class MainActivity : BaseActivity() {
                 FancyShowCaseView.hideCurrent(this)
             } else {
                 FancyShowCaseView.Builder(this)
-                        .focusOn(findViewById(R.id.btn_focus_dismiss_on_focus_area))
+                        .focusOn(findViewById<View>(R.id.btn_focus_dismiss_on_focus_area))
                         .enableTouchOnFocusedView(true)
                         .title("Focus on View \n(dismiss on focus area)")
                         .build()
@@ -320,7 +321,7 @@ class MainActivity : BaseActivity() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         FancyShowCaseView.Builder(this)
-                .focusOn(findViewById(item.itemId))
+                .focusOn(findViewById<View>(item.itemId))
                 .title("Focus on Actionbar items")
                 .build()
                 .show()
