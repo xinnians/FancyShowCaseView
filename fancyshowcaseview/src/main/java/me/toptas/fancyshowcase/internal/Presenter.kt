@@ -49,8 +49,8 @@ internal class Presenter(private val pref: SharedPref,
             return
         }
         // if view is not laid out get, width/height values in onGlobalLayout
-        if (props.focusedView?.cantFocus() == true) {
-            props.focusedView?.waitForLayout { onShow() }
+        if (props.focusedView?.get(props.index)?.cantFocus() == true) {
+            props.focusedView?.get(props.index)?.waitForLayout { onShow() }
         } else {
             onShow()
         }
@@ -62,15 +62,15 @@ internal class Presenter(private val pref: SharedPref,
         bitmapWidth = deviceWidth
         bitmapHeight = deviceHeight - if (props.fitSystemWindows) 0 else device.getStatusBarHeight()
         if (props.focusedView != null) {
-            focusWidth = props.focusedView!!.width()
-            focusHeight = props.focusedView!!.height()
+            focusWidth = props.focusedView!![props.index]?.width()
+            focusHeight = props.focusedView!![props.index]?.height()
             props.focusedView?.apply {
-                val center = getCircleCenter(this)
+                val center = getCircleCenter(this[props.index])
                 circleCenterX = center.x
                 circleCenterY = center.y
             }
 
-            viewRadius = ((hypot(props.focusedView!!.width().toDouble(), props.focusedView!!.height().toDouble()) / 2).toInt() * props.focusCircleRadiusFactor).toInt()
+            viewRadius = ((hypot(props.focusedView!![props.index]?.width().toDouble(), props.focusedView!![props.index]?.height().toDouble()) / 2).toInt() * props.focusCircleRadiusFactor).toInt()
             hasFocus = true
         } else {
             hasFocus = false

@@ -45,8 +45,9 @@ internal data class Properties(
         var fancyImageView: FancyImageView? = null,
         var dismissListener: DismissListener? = null,
         var queueListener: OnQueueListener? = null,
-        var focusedView: IFocusedView? = null,
-        var clickableView: IFocusedView? = null
+        var focusedView: ArrayList<IFocusedView>? = null,
+        var clickableView: IFocusedView? = null,
+        var index: Int = 0
 )
 
 internal data class AndroidProperties(

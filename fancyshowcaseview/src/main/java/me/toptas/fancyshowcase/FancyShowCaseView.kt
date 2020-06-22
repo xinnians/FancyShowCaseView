@@ -23,6 +23,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.text.Spanned
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -41,12 +42,13 @@ import me.toptas.fancyshowcase.ext.circularEnterAnimation
 import me.toptas.fancyshowcase.ext.circularExitAnimation
 import me.toptas.fancyshowcase.ext.globalLayoutListener
 import me.toptas.fancyshowcase.ext.rootView
+import me.toptas.fancyshowcase.internal.*
 import me.toptas.fancyshowcase.internal.AndroidProperties
 import me.toptas.fancyshowcase.internal.AnimationPresenter
 import me.toptas.fancyshowcase.internal.DeviceParamsImpl
 import me.toptas.fancyshowcase.internal.FadeOutAnimation
-import me.toptas.fancyshowcase.internal.FancyImageView
 import me.toptas.fancyshowcase.internal.FocusedView
+import me.toptas.fancyshowcase.internal.IFocusedView
 import me.toptas.fancyshowcase.internal.Presenter
 import me.toptas.fancyshowcase.internal.Properties
 import me.toptas.fancyshowcase.internal.SharedPrefImpl
@@ -166,11 +168,13 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupTouchListener() {
         setOnTouchListener(OnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 when {
-                    props.enableTouchOnFocusedView && presenter.isWithinZone(event.x, event.y, props.focusedView!!) -> {
+                    props.enableTouchOnFocusedView && presenter.isWithinZone(event.x, event.y, props.focusedView!![props.index]!!) -> {
+                        Log.e("Ian","[OnTouchListener] enableTouchOnFocusedView")
                         // Check if there is a clickable view within the focusable view
                         // Let the touch event pass through to clickable zone only if clicking within, otherwise return true to ignore event
                         // If there is no clickable view we let through the click to the focusable view
@@ -178,7 +182,16 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
                             return@OnTouchListener !presenter.isWithinZone(event.x, event.y, it)
                         } ?: return@OnTouchListener false
                     }
-                    props.closeOnTouch -> hide()
+                    props.closeOnTouch ->{
+                        Log.e("Ian","[OnTouchListener] closeOnTouch index:${props.index}")
+                        if(props.focusedView?.size?.minus(1) ?: 0 != props.index){
+                            props.index++
+//                            showNextFocusView()
+                            show()
+                        }else{
+                            hide()
+                        }
+                    }
                 }
             }
             true
@@ -281,7 +294,7 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
             val revealRadius = hypot(width.toDouble(), height.toDouble()).toInt()
             var startRadius = 0
             if (props.focusedView != null) {
-                startRadius = props.focusedView!!.width() / 2
+                startRadius = props.focusedView!![props.index].width() / 2
             } else if (props.focusCircleRadius > 0 || props.focusRectangleWidth > 0 || props.focusRectangleHeight > 0) {
                 mCenterX = props.focusPositionX
                 mCenterY = props.focusPositionY
@@ -291,6 +304,21 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
             }
         }
     }
+
+    private fun showNextFocusView(){
+        globalLayoutListener {
+            val revealRadius = hypot(width.toDouble(), height.toDouble()).toInt()
+            var startRadius = 0
+            if (props.focusedView != null) {
+                startRadius = props.focusedView!![props.index].width() / 2
+            } else if (props.focusCircleRadius > 0 || props.focusRectangleWidth > 0 || props.focusRectangleHeight > 0) {
+                mCenterX = props.focusPositionX
+                mCenterY = props.focusPositionY
+            }
+        }
+    }
+
+
 
     /**
      * Circular reveal exit animation
@@ -327,7 +355,6 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
     private fun shouldShowCircularAnimation(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
     }
-
 
     /**
      * Builder class for [FancyShowCaseView]
@@ -419,7 +446,14 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
          * @param view view to focus
          * @return Builder
          */
-        fun focusOn(view: View) = apply { props.focusedView = FocusedView(view) }
+        fun focusOn(view: ArrayList<View>) = apply {
+            var result: ArrayList<IFocusedView> = arrayListOf()
+            view.map { result.add(FocusedView(it)) }
+            props.focusedView = result }
+
+        fun focusOn(view: View) = apply {
+            props.focusedView = arrayListOf(FocusedView(view))
+        }
 
         /**
          * @param backgroundColor background color of FancyShowCaseView
