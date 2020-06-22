@@ -77,6 +77,7 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mCenterY: Int = 0
     private var mRoot: ViewGroup? = null
     private var fancyImageView: FancyImageView? = null
+    private var mCustomView: View? = null
 
     val focusCenterX: Int
         get() = presenter.circleCenterX
@@ -235,10 +236,16 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
      * @param viewInflateListener inflate listener for custom view
      */
     private fun inflateCustomView(@LayoutRes layout: Int, viewInflateListener: OnViewInflateListener?) {
-        activity.layoutInflater.inflate(layout, this, false)?.apply {
+        mCustomView?.let { removeView(it) }
+        mCustomView = activity.layoutInflater.inflate(layout, this, false)
+        mCustomView?.apply {
             addView(this)
             viewInflateListener?.onViewInflated(this)
         }
+//        activity.layoutInflater.inflate(layout, this, false)?.apply {
+//            addView(this)
+//            viewInflateListener?.onViewInflated(this)
+//        }
     }
 
     /**
