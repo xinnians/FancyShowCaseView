@@ -94,6 +94,12 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
     val focusShape: FocusShape
         get() = presenter.focusShape
 
+    val screenWidth: Int
+        get() = presenter.centerX*2
+
+    val screenHeight: Int
+        get() = presenter.centerY*2
+
     var queueListener: OnQueueListener?
         set(value) {
             props.queueListener = value
