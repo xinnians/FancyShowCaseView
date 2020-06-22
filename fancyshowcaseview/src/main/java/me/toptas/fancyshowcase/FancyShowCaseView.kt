@@ -174,7 +174,7 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 when {
                     props.enableTouchOnFocusedView && presenter.isWithinZone(event.x, event.y, props.focusedView!![props.index]!!) -> {
-                        Log.e("Ian","[OnTouchListener] enableTouchOnFocusedView")
+//                        Log.e("Ian","[OnTouchListener] enableTouchOnFocusedView")
                         // Check if there is a clickable view within the focusable view
                         // Let the touch event pass through to clickable zone only if clicking within, otherwise return true to ignore event
                         // If there is no clickable view we let through the click to the focusable view
@@ -183,11 +183,12 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
                         } ?: return@OnTouchListener false
                     }
                     props.closeOnTouch ->{
-                        Log.e("Ian","[OnTouchListener] closeOnTouch index:${props.index}")
+//                        Log.e("Ian","[OnTouchListener] closeOnTouch index:${props.index}")
                         if(props.focusedView?.size?.minus(1) ?: 0 != props.index){
                             props.index++
 //                            showNextFocusView()
                             show()
+                            inflateContent()
                         }else{
                             hide()
                         }
@@ -294,8 +295,10 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
             val revealRadius = hypot(width.toDouble(), height.toDouble()).toInt()
             var startRadius = 0
             if (props.focusedView != null) {
+//                Log.e("ian","[doCircularEnterAnimation] props.focusedView != null")
                 startRadius = props.focusedView!![props.index].width() / 2
             } else if (props.focusCircleRadius > 0 || props.focusRectangleWidth > 0 || props.focusRectangleHeight > 0) {
+//                Log.e("ian","[doCircularEnterAnimation] props.focusCircleRadius > 0 || props.focusRectangleWidth > 0 || props.focusRectangleHeight > 0")
                 mCenterX = props.focusPositionX
                 mCenterY = props.focusPositionY
             }
@@ -305,27 +308,12 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    private fun showNextFocusView(){
-        globalLayoutListener {
-            val revealRadius = hypot(width.toDouble(), height.toDouble()).toInt()
-            var startRadius = 0
-            if (props.focusedView != null) {
-                startRadius = props.focusedView!![props.index].width() / 2
-            } else if (props.focusCircleRadius > 0 || props.focusRectangleWidth > 0 || props.focusRectangleHeight > 0) {
-                mCenterX = props.focusPositionX
-                mCenterY = props.focusPositionY
-            }
-        }
-    }
-
-
-
     /**
      * Circular reveal exit animation
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun doCircularExitAnimation() {
-        circularExitAnimation(activity, mCenterX, mCenterY, mAnimationDuration) {
+        circularExitAnimation(activity, presenter.circleCenterX, presenter.circleCenterY, mAnimationDuration) {
             removeView()
             props.animationListener?.onExitAnimationEnd()
         }
