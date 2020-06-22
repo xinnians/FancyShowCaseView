@@ -246,8 +246,9 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
         mCustomView = activity.layoutInflater.inflate(layout, this, false)
         mCustomView?.apply {
             addView(this)
-            viewInflateListener?.onViewInflated(this)
+            viewInflateListener?.onViewInflated(this,(props.focusedView!![props.index] as View).id,props.index)
         }
+
 //        activity.layoutInflater.inflate(layout, this, false)?.apply {
 //            addView(this)
 //            viewInflateListener?.onViewInflated(this)
@@ -259,7 +260,7 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
      */
     private fun inflateTitleView() {
         inflateCustomView(R.layout.fancy_showcase_view_layout_title, object : OnViewInflateListener {
-            override fun onViewInflated(view: View) {
+            override fun onViewInflated(view: View,focusId: Int,focusIndex: Int) {
                 val textView = view.findViewById<View>(R.id.fscv_title) as TextView
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

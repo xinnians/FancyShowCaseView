@@ -23,5 +23,5 @@ import android.view.View
  */
 
 interface OnViewInflateListener {
-    fun onViewInflated(view: View)
+    fun onViewInflated(view: View,focusId: Int,focusIndex: Int)
 }
