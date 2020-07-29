@@ -79,6 +79,8 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
     private var fancyImageView: FancyImageView? = null
     private var mCustomView: View? = null
 
+    private var mStatusBarHeight: Int = 0
+
     val focusCenterX: Int
         get() = presenter.circleCenterX
 
@@ -110,13 +112,19 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
         props = _props
         activity = _activity
         androidProps = _androidProps
+
+        var resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            mStatusBarHeight = context.resources.getDimensionPixelSize(resourceId);
+        }
+
         val deviceParams = DeviceParamsImpl(activity, this)
         presenter = Presenter(preferences(activity), deviceParams, props)
         animationPresenter = AnimationPresenter(androidProps, deviceParams)
 
         presenter.initialize()
         mCenterX = presenter.centerX
-        mCenterY = presenter.centerY
+        mCenterY = presenter.centerY + mStatusBarHeight
     }
 
     /**
