@@ -124,7 +124,7 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
 
         presenter.initialize()
         mCenterX = presenter.centerX
-        mCenterY = presenter.centerY + mStatusBarHeight
+        mCenterY = presenter.centerY
     }
 
     /**

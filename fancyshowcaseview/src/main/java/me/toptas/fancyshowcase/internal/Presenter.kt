@@ -60,7 +60,7 @@ internal class Presenter(private val pref: SharedPref,
         val deviceWidth = device.deviceWidth()
         val deviceHeight = device.deviceHeight()
         bitmapWidth = deviceWidth
-        bitmapHeight = deviceHeight - if (props.fitSystemWindows) 0 else device.getStatusBarHeight()
+        bitmapHeight = deviceHeight 
         if (props.focusedView != null) {
             focusWidth = props.focusedView!![props.index]?.width()
             focusHeight = props.focusedView!![props.index]?.height()
