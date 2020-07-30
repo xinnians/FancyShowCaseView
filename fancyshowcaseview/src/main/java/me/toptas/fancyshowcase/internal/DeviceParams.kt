@@ -36,8 +36,14 @@ internal class DeviceParamsImpl(private val activity: Activity, view: View) : De
     override fun getStatusBarHeight() = getStatusBarHeight(activity)
 
     override fun isFullScreen(): Boolean {
+        val isDrawSystemBar: Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS === WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+        } else {
+            false
+        }
+
         val windowFlags = activity.window.attributes.flags
-        return (windowFlags and WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
+        return (windowFlags and WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0 || isDrawSystemBar
     }
 
     override fun aboveAPI19() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP

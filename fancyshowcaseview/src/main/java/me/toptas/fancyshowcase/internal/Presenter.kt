@@ -1,7 +1,9 @@
 package me.toptas.fancyshowcase.internal
 
 import android.graphics.Rect
+import android.util.Log
 import android.view.Gravity
+import android.view.WindowManager
 import me.toptas.fancyshowcase.FocusShape
 import me.toptas.fancyshowcase.R
 import kotlin.math.abs
@@ -9,10 +11,11 @@ import kotlin.math.hypot
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+
 internal var DISABLE_ANIMATIONS_FOR_TESTING = false
 
 internal class Presenter(private val pref: SharedPref,
-                         private val device: DeviceParams,
+                         val device: DeviceParams,
                          private val props: Properties) {
 
     var centerX: Int = 0
@@ -60,7 +63,7 @@ internal class Presenter(private val pref: SharedPref,
         val deviceWidth = device.deviceWidth()
         val deviceHeight = device.deviceHeight()
         bitmapWidth = deviceWidth
-        bitmapHeight = deviceHeight 
+        bitmapHeight = deviceHeight - if (props.fitSystemWindows) 0 else device.getStatusBarHeight()
         if (props.focusedView != null) {
             focusWidth = props.focusedView!![props.index]?.width()
             focusHeight = props.focusedView!![props.index]?.height()
@@ -127,6 +130,8 @@ internal class Presenter(private val pref: SharedPref,
     fun getCircleCenter(view: IFocusedView): CircleCenter {
         val shouldAdjustYPosition = (props.fitSystemWindows && device.aboveAPI19()
                 || (device.isFullScreen() && !props.fitSystemWindows))
+
+        Log.e("Ian","[getCircleCenter] shouldAdjustYPosition:$shouldAdjustYPosition")
 
         val adjustHeight = if (shouldAdjustYPosition)
             0
